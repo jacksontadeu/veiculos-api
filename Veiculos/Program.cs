@@ -6,6 +6,7 @@ using Veiculos.Dominio.Interfaces;
 using Veiculos.Dominio.Servicos;
 using Veiculos.Dominio.Validacao;
 using Veiculos.Infraestrutura.Db;
+using Veiculos.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +68,21 @@ app.MapPost("/veiculo/Cadastrarveiculo", ([FromBody] VeiculoDTO veiculoDTO, IVei
     };
     veiculoService.CriarVeiculo(veiculo);
     return Results.Created(string.Empty, veiculo);
+
+});
+app.MapPut("/veiculo/AlterarVeiculo/{id}", (int id,IVeiculoService veiculoService, VeiculoDTO veiculoDTO) =>
+{
+    var veiculo = veiculoService.BuscaPorId(id);
+    var validacao = new ValidaVeiculo();
+    var valida = validacao.ValidaDTO(veiculoDTO);
+    if (valida.Mensagens.Count > 0)
+        return Results.BadRequest(valida);
+
+    veiculo.Nome = veiculoDTO.Nome;
+    veiculo.Marca = veiculoDTO.Marca;
+    veiculo.Ano = veiculoDTO.Ano;
+    veiculoService.AlterarVeiculo(veiculo);
+    return Results.Ok(veiculo);
 
 });
 
