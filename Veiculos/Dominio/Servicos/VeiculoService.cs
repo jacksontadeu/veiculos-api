@@ -32,7 +32,7 @@ public class VeiculoService : IVeiculoService
     public Veiculo? BuscaPorId(int id)
     {
         var veiculo = _context.Veiculos.Where(v => v.Id == id).FirstOrDefault();
-        return veiculo.
+        return veiculo;
     }
 
     public Veiculo CriarVeiculo(Veiculo veiculo)
