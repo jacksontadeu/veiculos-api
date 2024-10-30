@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using Veiculos.Dominio.DTOs;
 using Veiculos.Dominio.Entidades;
@@ -85,12 +86,13 @@ app.MapPut("/veiculo/AlterarVeiculo/{id}", (int id,IVeiculoService veiculoServic
     return Results.Ok(veiculo);
 
 });
-
-
-
-
-
-
+app.MapDelete("/veiculo/Deletarveiculo/{id}", (int id, IVeiculoService veiculoService) =>
+{
+    var veiculo = veiculoService.BuscaPorId(id);
+    if (veiculo is null) return Results.NotFound();
+    veiculoService.DeletarVeiculo(id);
+    return Results.Ok(veiculo);
+});
 
 app.Run();
 
